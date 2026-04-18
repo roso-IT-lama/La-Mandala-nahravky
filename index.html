@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naše nahrávky</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 30px 0 20px;
+            font-size: 2em;
+            color: #e0aaff;
+        }
+
+        /* --- VYHLEDÁVÁNÍ --- */
+        #hledej {
+            display: block;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            padding: 12px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 25px;
+            background: #16213e;
+            color: #eee;
+            outline: 2px solid #7b2d8b;
+        }
+
+        #hledej:focus {
+            outline: 2px solid #e0aaff;
+        }
+
+        /* --- ZÁLOŽKY --- */
+        .tabbar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            padding: 10px 30px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1em;
+            background: #16213e;
+            color: #aaa;
+            transition: all 0.2s;
+        }
+
+        .tab.aktivni {
+            background: #7b2d8b;
+            color: white;
+        }
+
+        /* --- GRID --- */
+        #obsah {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* --- KARTA NAHRÁVKY --- */
+        .karta {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.2s;
+        }
+
+        .karta:hover {
+            transform: translateY(-3px);
+        }
+
+        .karta h3 {
+            color: #e0aaff;
+            margin-bottom: 6px;
+            font-size: 1.1em;
+        }
+
+        .karta .datum {
+            font-size: 0.85em;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .karta .popis {
+            font-size: 0.9em;
+            color: #bbb;
+            margin-bottom: 12px;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 5px;
+            accent-color: #7b2d8b;
+        }
+
+        /* --- KARTA FOTKY --- */
+        .karta img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .karta img:hover {
+            opacity: 0.85;
+        }
+
+        /* --- LIGHTBOX --- */
+        #lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            cursor: pointer;
+        }
+
+        #lightbox img {
+            max-width: 90%;
+            max-height: 90vh;
+            border-radius: 8px;
+        }
+
+        /* --- PRÁZDNÝ STAV --- */
+        #prazdno {
+            text-align: center;
+            color: #555;
+            padding: 60px;
+            grid-column: 1/-1;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🎙️ Naše nahrávky</h1>
+
+<input type="text" id="hledej" placeholder="🔍 Hledat podle názvu nebo popisu..." oninput="filtruj()">
+
+<div class="tabbar">
+    <button class="tab aktivni" onclick="prepniTab('vse', this)">Vše</button>
+    <button class="tab" onclick="prepniTab('nahravky', this)">🎙️ Nahrávky</button>
+    <button class="tab" onclick="prepniTab('fotky', this)">📷 Fotky</button>
+</div>
+
+<div id="obsah"></div>
+
+<!-- Lightbox pro fotky -->
+<div id="lightbox" onclick="zavriLightbox()">
+    <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+// =============================================
+//   ZDE PŘIDÁVEJ NAHRÁVKY A FOTKY
+// =============================================
+
+const DATA = [
+
+    // --- NAHRÁVKY ---
+    // Zkopíruj tento blok pro každou nahrávku:
+    {
+        typ: "nahravka",
+        nazev: "Rozhovor s Adamem",
+        datum: "15. 4. 2026",
+        popis: "Úvodní rozhovor o projektu",
+        soubor: "nahravky/rozhovor-adam.m4a"
+    },
+    {
+        typ: "nahravka",
+        nazev: "Schůzka týmu",
+        datum: "10. 4. 2026",
+        popis: "Plánování dalšího měsíce",
+        soubor: "nahravky/schuzka-tymu.m4a"
+    },
+    {
+        typ: "nahravka",
+        nazev: "Brainstorming",
+        datum: "5. 4. 2026",
+        popis: "Nápady na nové téma",
+        soubor: "nahravky/brainstorming.m4a"
+    },
+
+    // --- FOTKY ---
+    // Zkopíruj tento blok pro každou fotku:
+    {
+        typ: "fotka",
+        nazev: "Setkání skupiny",
+        datum: "12. 4. 2026",
+        popis: "Foto ze společné schůzky",
+        soubor: "fotky/setkani.jpg"
+    },
+    {
+        typ: "fotka",
+        nazev: "Pracovní prostor",
+        datum: "8. 4. 2026",
+        popis: "",
+        soubor: "fotky/prostor.jpg"
+    },
+
+];
+
+// =============================================
+//   LOGIKA (nemusíš měnit)
+// =============================================
+
+let aktualniTab = "vse";
+
+function filtruj() {
+    const hledani = document.getElementById("hledej").value.toLowerCase();
+    const obsah = document.getElementById("obsah");
+    obsah.innerHTML = "";
+
+    const filtrovana = DATA.filter(polozka => {
+        const odpovida = (polozka.nazev + " " + polozka.popis)
+                         .toLowerCase().includes(hledani);
+        const spravnyTyp = aktualniTab === "vse"
+            || (aktualniTab === "nahravky" && polozka.typ === "nahravka")
+            || (aktualniTab === "fotky" && polozka.typ === "fotka");
+        return odpovida && spravnyTyp;
+    });
+
+    if (filtrovana.length === 0) {
+        obsah.innerHTML = '<div id="prazdno">😕 Nic nenalezeno</div>';
+        return;
+    }
+
+    filtrovana.forEach(p => {
+        const karta = document.createElement("div");
+        karta.className = "karta";
+
+        if (p.typ === "nahravka") {
+            karta.innerHTML = `
+                <h3>🎙️ ${p.nazev}</h3>
+                <div class="datum">📅 ${p.datum}</div>
+                ${p.popis ? `<div class="popis">${p.popis}</div>` : ""}
+                <audio controls>
+                    <source src="${p.soubor}" type="audio/mp4">
+                    Váš prohlížeč nepodporuje přehrávání.
+                </audio>`;
+        } else {
+            karta.innerHTML = `
+                <img src="${p.soubor}" alt="${p.nazev}" 
+                     onclick="otevriLightbox('${p.soubor}')">
+                <h3>📷 ${p.nazev}</h3>
+                <div class="datum">📅 ${p.datum}</div>
+                ${p.popis ? `<div class="popis">${p.popis}</div>` : ""}`;
+        }
+
+        obsah.appendChild(karta);
+    });
+}
+
+function prepniTab(tab, btn) {
+    aktualniTab = tab;
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("aktivni"));
+    btn.classList.add("aktivni");
+    filtruj();
+}
+
+function otevriLightbox(src) {
+    document.getElementById("lightbox-img").src = src;
+    document.getElementById("lightbox").style.display = "flex";
+}
+
+function zavriLightbox() {
+    document.getElementById("lightbox").style.display = "none";
+}
+
+// Spustit při načtení
+filtruj();
+</script>
+
+</body>
+</html>
