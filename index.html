@@ -190,7 +190,7 @@
 const DATA = [
 
     {
-        typ: "nahravka",
+        typ: "nevanocni",
         nazev: "Nad břehym nad vodu",
         datum: "18. 4. 2026",
         popis: "",
@@ -198,7 +198,7 @@ const DATA = [
     },
 
     {
-        typ: "nahravka",
+        typ: "nevanocni",
         nazev: "Pohoda",
         datum: "18. 4. 2026",
         popis: "",
@@ -206,7 +206,7 @@ const DATA = [
     },
 
     {
-        typ: "nahravka",
+        typ: "nevanocni",
         nazev: "Povídajú ludé",
         datum: "18. 4. 2026",
         popis: "",
@@ -238,7 +238,7 @@ function filtruj() {
         const odpovida = (polozka.nazev + " " + polozka.popis)
                          .toLowerCase().includes(hledani);
         const spravnyTyp = 
-            (aktualniTab === "nevanocni" && polozka.typ === "nahravka")
+            (aktualniTab === "nevanocni" && polozka.typ === "nevanocni")
             || (aktualniTab === "fotky" && polozka.typ === "fotka")
             || (aktualniTab === "vanocni" && polozka.typ === "vanocni");
         return odpovida && spravnyTyp;
