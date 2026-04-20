@@ -169,9 +169,9 @@
 <input type="text" id="hledej" placeholder="🔍 Hledat podle názvu nebo popisu..." oninput="filtruj()">
 
 <div class="tabbar">
-    <button class="tab aktivni" onclick="prepniTab('vse', this)">Vše</button>
-    <button class="tab" onclick="prepniTab('nahravky', this)">🎙️ Nahrávky</button>
+    <button class="tab aktivni" onclick="prepniTab('ostatni', this)">🎙️ Nevánoční</button>
     <button class="tab" onclick="prepniTab('fotky', this)">📷 Fotky</button>
+    <button class="tab" onclick="prepniTab('vanocni', this)">🎸 Vánoční</button>
 </div>
 
 <div id="obsah"></div>
@@ -204,13 +204,21 @@ const DATA = [
         soubor: "pohoda.m4a"
     },
 
+    {
+        typ: "vanocni",
+        nazev: "La lu la lej (2025)",
+        datum: "18. 4. 2026",
+        popis: "",
+        soubor: "La-lula-lej-2025.m4a"
+},
+
 ];
 
 // =============================================
 //   LOGIKA (nemusíš měnit)
 // =============================================
 
-let aktualniTab = "vse";
+let aktualniTab = "nevanocni";
 
 function filtruj() {
     const hledani = document.getElementById("hledej").value.toLowerCase();
@@ -220,9 +228,10 @@ function filtruj() {
     const filtrovana = DATA.filter(polozka => {
         const odpovida = (polozka.nazev + " " + polozka.popis)
                          .toLowerCase().includes(hledani);
-        const spravnyTyp = aktualniTab === "vse"
-            || (aktualniTab === "nahravky" && polozka.typ === "nahravka")
-            || (aktualniTab === "fotky" && polozka.typ === "fotka");
+        const spravnyTyp = 
+            (aktualniTab === "nevanocni" && polozka.typ === "nahravka")
+            || (aktualniTab === "fotky" && polozka.typ === "fotka")
+            || (aktualniTab === "vanocni" && polozka.typ === "vanocni");
         return odpovida && spravnyTyp;
     });
 
