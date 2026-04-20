@@ -14,11 +14,20 @@
             padding: 20px;
         }
 
+        /* --- FOTO SBORU --- */
+        #foto-sboru {
+            display: block;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto 0;
+            border-radius: 12px;
+        }
+
         h1 {
             text-align: center;
-            padding: 30px 0 20px;
+            padding: 20px 0;
             font-size: 2em;
-            color: #e0aaff;
+            color: #00708C;
         }
 
         /* --- VYHLEDÁVÁNÍ --- */
@@ -33,11 +42,11 @@
             border-radius: 25px;
             background: #16213e;
             color: #eee;
-            outline: 2px solid #7b2d8b;
+            outline: 2px solid #00708C;
         }
 
         #hledej:focus {
-            outline: 2px solid #e0aaff;
+            outline: 2px solid #00b8d9;
         }
 
         /* --- ZÁLOŽKY --- */
@@ -60,7 +69,7 @@
         }
 
         .tab.aktivni {
-            background: #7b2d8b;
+            background: #00708C;
             color: white;
         }
 
@@ -78,6 +87,7 @@
             background: #16213e;
             border-radius: 12px;
             padding: 20px;
+            border: 1px solid #00708C;
             transition: transform 0.2s;
         }
 
@@ -86,7 +96,7 @@
         }
 
         .karta h3 {
-            color: #e0aaff;
+            color: #00708C;
             margin-bottom: 6px;
             font-size: 1.1em;
         }
@@ -106,7 +116,7 @@
         audio {
             width: 100%;
             margin-top: 5px;
-            accent-color: #7b2d8b;
+            accent-color: #00708C;
         }
 
         /* --- KARTA FOTKY --- */
@@ -152,6 +162,8 @@
 </head>
 <body>
 
+<img id="foto-sboru" src="fotky/sbor.jpg" alt="Foto sboru">
+
 <h1>🎙️ Naše nahrávky</h1>
 
 <input type="text" id="hledej" placeholder="🔍 Hledat podle názvu nebo popisu..." oninput="filtruj()">
@@ -180,7 +192,7 @@ const DATA = [
         typ: "nahravka",
         nazev: "Nad břehym nad vodu",
         datum: "18. 4. 2026",
-        popis: "Vlcinska",
+        popis: "",
         soubor: "nad-brehym-nad-vodu.m4a"
     },
 
@@ -188,20 +200,11 @@ const DATA = [
         typ: "nahravka",
         nazev: "Pohoda",
         datum: "18. 4. 2026",
-        popis: "Vlcinska",
+        popis: "",
         soubor: "pohoda.m4a"
     },
 
-    {
-        typ: "fotka",
-        nazev: "Noty",
-        datum: "18. 4. 2026",
-        popis: "",
-        soubor: "foto_noty.jpg"
-    },
-
 ];
-
 
 // =============================================
 //   LOGIKA (nemusíš měnit)
@@ -243,7 +246,7 @@ function filtruj() {
                 </audio>`;
         } else {
             karta.innerHTML = `
-                <img src="${p.soubor}" alt="${p.nazev}" 
+                <img src="${p.soubor}" alt="${p.nazev}"
                      onclick="otevriLightbox('${p.soubor}')">
                 <h3>📷 ${p.nazev}</h3>
                 <div class="datum">📅 ${p.datum}</div>
@@ -270,7 +273,6 @@ function zavriLightbox() {
     document.getElementById("lightbox").style.display = "none";
 }
 
-// Spustit při načtení
 filtruj();
 </script>
 
