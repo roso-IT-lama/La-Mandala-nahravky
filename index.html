@@ -253,7 +253,7 @@ function filtruj() {
         const karta = document.createElement("div");
         karta.className = "karta";
 
-        if (p.typ === "nahravka") {
+        if (p.typ === "nevanocni" || p.typ === "vanocni") {
             karta.innerHTML = `
                 <h3>🎙️ ${p.nazev}</h3>
                 <div class="datum">📅 ${p.datum}</div>
