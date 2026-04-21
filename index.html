@@ -310,7 +310,7 @@ function filtruj() {
         if (p.typ === "nevanocni" || p.typ === "vanocni") {
             karta.innerHTML = `
                 <h3>🎙️ ${p.nazev}</h3>
-                <div class="datum">📅 ${p.datum}</div>
+                <div class="datum">${p.datum}</div>
                 ${p.popis ? `<div class="popis">${p.popis}</div>` : ""}
                 <audio controls>
                     <source src="${p.soubor}" type="audio/mp4">
@@ -321,7 +321,7 @@ function filtruj() {
                 <img src="${p.soubor}" alt="${p.nazev}"
                      onclick="otevriLightbox('${p.soubor}')">
                 <h3>📷 ${p.nazev}</h3>
-                <div class="datum">📅 ${p.datum}</div>
+                <div class="datum">${p.datum}</div>
                 ${p.popis ? `<div class="popis">${p.popis}</div>` : ""}`;
         }
 
